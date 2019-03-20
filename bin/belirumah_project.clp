@@ -55,6 +55,13 @@
 	(printout t "2. House without Garage" crlf)
 )
 
+(deffunction menu4()
+	(printout t "Type of houses to be updated" crlf)
+	(printout t "================================" crlf)
+	(printout t "1. House with Garage" crlf)
+	(printout t "2. House without Garage" crlf)
+)
+
 (deffunction addhouse()
 	(bind ?type "")
 	(bind ?room "")
@@ -188,8 +195,230 @@
     )
     
     (assert (housegarage (type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage)))
+)
+
+
+(deffunction updatehouse()
+    (bind ?chooseindex "")
+    (bind ?flagg FALSE)
     
-         
+    (while (or
+            	(eq ?flagg FALSE)
+            	(or
+	            	(< ?chooseindex 0)
+	            	(> ?chooseindex 5)
+	            )
+            )
+        (printout t "Which house to be updated[1..x | 0 back to main menu]: ")
+        (bind ?chooseindex (read))
+        
+        (if (numberp ?chooseindex TRUE) then
+        	(bind ?flagg TRUE)    
+        )
+    )
+    
+    (if (neq ?chooseindex 0) then
+		(bind ?type "")
+		(bind ?room "")
+		(bind ?price "")
+		(bind ?location "")    
+	    
+	    (while (and
+	            	(neq ?type "Cottage"),
+	            	(neq ?type "Light House"),
+	            	(neq ?type "Skyscraper")
+	            )
+	        (printout t "Input house type [Cottage | Light House | Skyscraper](CASE-SENSITIVE): ")
+	        (bind ?type (readline))
+	    )  
+	    
+	    (bind ?flag1 FALSE)
+	    (while (or
+	            	(eq ?flag1 FALSE)
+		            (or
+		            	(< ?room 1)
+		            	(> ?room 5)
+	                )
+	            )
+	        (printout t "Input room number [1 - 5]: ")
+	        (bind ?room (read))
+	        
+	        (if (numberp ?room TRUE) then
+	        	(bind ?flag1 TRUE)  
+	        )
+	    )
+	    
+	    (bind ?flag2 FALSE)
+	    (while (or
+	            	(eq ?flag2 FALSE)
+	            	(or
+		            	(< ?price 1000)
+		            	(> ?price 50000)
+		            )
+	            )
+	        (printout t "Input house price [1000 - 50000] (dollars): ")
+	        (bind ?price (read))
+	        
+	        (if (numberp ?price TRUE) then
+	        	(bind ?flag2 TRUE)    
+	        )
+	    )
+	    
+	    (while (and
+	            	(neq ?location "West Jakarta"),
+	            	(neq ?location "North Jakarta"),
+	            	(neq ?location "South Jakarta")
+	            )
+	        (printout t "Input house location [West Jakarta | North Jakarta | South Jakarta](CASE-SENSITIVE): ")
+	        (bind ?location (readline))
+	    )
+	    
+	    (modify ?chooseindex (type ?type) (room ?room) (price ?price) (location ?location))
+    )
+)
+
+(deffunction updatehousegarage()
+    (bind ?chooseindex "")
+    (bind ?flagg FALSE)
+    
+    (while (or
+            	(eq ?flagg FALSE)
+            	(or
+	            	(< ?chooseindex 0)
+	            	(> ?chooseindex 5)
+	            )
+            )
+        (printout t "Which house to be updated[1..x | 0 back to main menu]: ")
+        (bind ?chooseindex (read))
+        
+        (if (numberp ?chooseindex TRUE) then
+        	(bind ?flagg TRUE)    
+        )
+    )
+    
+    (if (neq ?chooseindex 0) then
+		(bind ?type "")
+		(bind ?room "")
+		(bind ?price "")
+		(bind ?location "")   
+		(bind ?garage "")  
+	    
+	    (while (and
+	            	(neq ?type "Cottage"),
+	            	(neq ?type "Light House"),
+	            	(neq ?type "Skyscraper")
+	            )
+	        (printout t "Input house type [Cottage | Light House | Skyscraper](CASE-SENSITIVE): ")
+	        (bind ?type (readline))
+	    )  
+	    
+	    (bind ?flag1 FALSE)
+	    (while (or
+	            	(eq ?flag1 FALSE)
+	            	(or
+		            	(< ?room 1)
+		            	(> ?room 5)
+		            )
+	            )
+	        (printout t "Input room number [1 - 5]: ")
+	        (bind ?room (read))
+	        
+	        (if (numberp ?room TRUE) then
+	        	(bind ?flag1 TRUE)   
+	        )
+	    )
+	    
+	    (bind ?flag2 FALSE)
+	    (while (or
+	            	(eq ?flag2 FALSE)
+	            	(or
+		            	(< ?price 1000)
+		            	(> ?price 50000)
+		            )
+	            )
+	        (printout t "Input house price [1000 - 50000] (dollars): ")
+	        (bind ?price (read))
+	        
+	        (if (numberp ?price TRUE) then
+	        	(bind ?flag2 TRUE)    
+	        )
+	    )
+	    
+	    (while (and
+	            	(neq ?location "West Jakarta"),
+	            	(neq ?location "North Jakarta"),
+	            	(neq ?location "South Jakarta")
+	            )
+	        (printout t "Input house location [West Jakarta | North Jakarta | South Jakarta](CASE-SENSITIVE): ")
+	        (bind ?location (readline))
+	    )
+	    
+	    (bind ?flag3 FALSE)
+	    (while (or
+	            	(eq ?flag3 FALSE)
+	            	(or
+		            	(< ?garage 1)
+		            	(> ?garage 5)
+		            )
+	            )
+	        (printout t "Input garage number [1 - 5]: ")
+	        (bind ?garage (read))
+	        
+	        (if (numberp ?garage FALSE) then
+	        	(bind ?flag3 TRUE)    
+	        )
+	    )
+	    
+	    (modify ?chooseindex (type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage))
+	)
+)
+
+(deffunction deletehouse()
+    (bind ?chooseindex "")
+    (bind ?flagg FALSE)
+    
+    (while (or
+            	(eq ?flagg FALSE)
+            	(or
+	            	(< ?chooseindex 0)
+	            	(> ?chooseindex 5)
+	            )
+            )
+        (printout t "Which house to be updated[1..x | 0 back to main menu]: ")
+        (bind ?chooseindex (read))
+        
+        (if (numberp ?chooseindex TRUE) then
+        	(bind ?flagg TRUE)    
+        )
+    )
+    
+    (if (neq ?chooseindex 0) then
+		(retract ?chooseindex)
+	)
+)
+
+(deffunction deletehousegarage()
+    (bind ?chooseindex "")
+    (bind ?flagg FALSE)
+    
+    (while (or
+            	(eq ?flagg FALSE)
+            	(or
+	            	(< ?chooseindex 0)
+	            	(> ?chooseindex 5)
+	            )
+            )
+        (printout t "Which house to be updated[1..x | 0 back to main menu]: ")
+        (bind ?chooseindex (read))
+        
+        (if (numberp ?chooseindex TRUE) then
+        	(bind ?flagg TRUE)    
+        )
+    )
+    
+    (if (neq ?chooseindex 0) then
+		(retract ?chooseindex)
+	)
 )
 
 (defrule printhouse
@@ -243,7 +472,7 @@
     	   (if (eq ?innerchoice 2) then
         		(run)
             )
-			(printout t "Press Any Key to Continue..")
+			(printout t "Press Enter to Continue..")
             (readline)
         )
      
@@ -272,7 +501,7 @@
     	   (if (eq ?innerchoice 2) then
         		(addhouse)
             )
-			(printout t "Press Any Key to Continue..")
+			(printout t "Press Enter to Continue..")
             (readline)
         )
      
@@ -281,13 +510,59 @@
     )
     
     (if (eq ?choice 3) then
-    
+        
+        (bind ?innerchoice -1)
+        (cls)
+    	(menu4)
+    	
+        (while (or
+            	(< ?innerchoice 0)
+            	(> ?innerchoice 2)
+            )
+			(printout t ">> Choose [1..2 | 0 back to main menu]: ")
+	        (bind ?innerchoice (read))
+    	)    
+        
+        (if (neq ?innerchoice 0) then
+    	   (if (eq ?innerchoice 1) then
+        		(updatehousegarage)
+            )
+    	   (if (eq ?innerchoice 2) then
+        		(updatehouse)
+            )
+			(printout t "Press Enter to Continue..")
+            (readline)
+        )
+        
     	(cls)
     	(bind ?choice 0)
     )
     
     (if (eq ?choice 4) then
-    
+        
+        (bind ?innerchoice -1)
+        (cls)
+    	(menu4)
+    	
+        (while (or
+            	(< ?innerchoice 0)
+            	(> ?innerchoice 2)
+            )
+			(printout t ">> Choose [1..2 | 0 back to main menu]: ")
+	        (bind ?innerchoice (read))
+    	)    
+        
+        (if (neq ?innerchoice 0) then
+    	   (if (eq ?innerchoice 1) then
+        		(deletehousegarage)
+            )
+    	   (if (eq ?innerchoice 2) then
+        		(deletehouse)
+            )
+			(printout t "Press Enter to Continue..")
+            (readline)
+        )
+        
     	(cls)
     	(bind ?choice 0)
     )

@@ -193,14 +193,16 @@
     )
     (bind ?flag2 FALSE)
     (bind ?car "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?car 1)(> ?car 5)))
-        (printout t "Input number of car you own [1 - 5]: ")
-        (bind ?car (read))
-        (if (numberp ?car TRUE) then
-        	(bind ?flag2 TRUE) 
-            else then
-            	(bind ?car 0) 
-        )
+    (if (eq ?preference "With Garage") then
+	    (while (or(eq ?flag2 FALSE)(or(< ?car 1)(> ?car 5)))
+	        (printout t "Input number of car you own [1 - 5]: ")
+	        (bind ?car (read))
+	        (if (numberp ?car TRUE) then
+	        	(bind ?flag2 TRUE) 
+	            else then
+	            	(bind ?car 0) 
+	        )
+	    )
     )
     (assert (Person (name ?name) (gender ?gender) (preference ?preference) (income ?income) (location ?location) (type ?type) (car ?car)))
 )

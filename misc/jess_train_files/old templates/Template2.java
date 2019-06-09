@@ -52,7 +52,7 @@ public class Template2 extends JFrame implements ActionListener{
 		
 		
 		setTitle("The Result of Consultation");
-		setSize(500, 400);
+		setSize(600, 400);
 		pane.setLayout(new ScrollPaneLayout());
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		pane2.setLayout(new GridLayout(2, 5));
@@ -82,28 +82,41 @@ public class Template2 extends JFrame implements ActionListener{
 					vecgarage.add(result.getInt("garage"));
 				}
 
+				String typeHouse = "";
+				int income = 0;
+				int car = 0;
+				String location = "";
+				while(search.next()){
+					typeHouse = search.getString("type");
+					income = search.getInt("income");
+					location = search.getString("location");
+					car = search.getInt("car");
+				}
+
 				for(int i = 0; i < vectype.size(); i++){
 					int rate = 100;
+
+					if(vectype.get(i) != typeHouse){
+						rate -= 5;
+					}
+
+					if(vecprice.get(i) > income){
+						rate -= 10;
+					}
+
+					if(veclocation.get(i) != location){
+						rate -= 10;
+					}
+
+					if(vecgarage.get(i) < car){
+						rate -= 10;
+					}	
+					
 					txt[0].append(vectype.get(i) + "\n");
 					txt[1].append(vecroom.get(i) + "\n");
 					txt[2].append(vecprice.get(i) + "\n");
 					txt[3].append(veclocation.get(i) + "\n");
 					txt[4].append(vecgarage.get(i) + "\n");
-					if(vectype.get(i) != search.getString("type")){
-						rate -= 5;
-					}
-
-					if(vecprice.get(i) > search.getInt("income")){
-						rate -= 10;
-					}
-
-					if(veclocation.get(i) != search.getString("location")){
-						rate -= 10;
-					}
-
-					if(vecgarage.get(i) < search.getInt("car")){
-						rate -= 10;
-					}
 					txt[5].append(rate + "%\n");
 				}
 				

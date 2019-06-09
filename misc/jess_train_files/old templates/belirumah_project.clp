@@ -541,7 +541,7 @@
         (++ ?countPerson)   
     )
     (if (eq (?get getString preference) "With Garage") then
-        (new Template)
+        (new Template2)
         elif (eq (?get getString preference) "Without Garage") then
         (new Template)
     )

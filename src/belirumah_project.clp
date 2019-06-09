@@ -18,6 +18,16 @@
     (slot garage)
 )
 
+(deftemplate Person
+    (slot name)
+    (slot gender)
+    (slot preference)
+    (slot income)
+    (slot location)
+    (slot type)
+    (slot car)
+)
+
 (deffacts HouseFact
 	(House (type "Cottage") (room 3) (price 7500) (location "South Jakarta")) 
 	(House (type "Light House") (room 3) (price 25000) (location "South Jakarta")) 
@@ -44,14 +54,16 @@
     (House (type ?type) (room ?room) (price ?price) (location ?location))
 )
 
+(defquery getPerson
+    "query to store personal data in 'Search Match' WITHOUT garage"
+    (Person (name ?name) (gender ?gender) (preference ?preference) (income ?income) (location ?location) (type ?type) (car ?car))
+)
+
 ;INSERT DEFRULE HERE
 ;//
 
 ; TODO LIST : 
 ; menu5 function !!important!!
-; numeric validation error fix --> see comment above addHouseGarage method
-; numeric validation add --> ALL menu that has '0 to return to main menu'
-; numeric validation + 0 to main menu --> update and delete house method
 
 (deffunction cls()
 	(for (bind ?i 0) (<= ?i 30) (++ ?i)
@@ -59,8 +71,6 @@
     )    
 )
 
-;NUMBER & <> VALIDATION ON ADDHOUSE STILL BUGGY
-;TRY INPUT : Q, 3, Q --> ERROR
 (deffunction addHouseGarage()
     (bind ?type "")
     (while (and (neq ?type "Cottage") (neq ?type "Light House") (neq ?type "Skyscraper"))
@@ -80,8 +90,8 @@
     )
     (bind ?flag2 FALSE)
     (bind ?price "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 50000)))
-        (printout t "Input house price [1000 - 50000] (dollars): ")
+    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 500000)))
+        (printout t "Input house price [1000 - 500000] (dollars): ")
         (bind ?price (read))
         (if (numberp ?price TRUE) then
         	(bind ?flag2 TRUE)  
@@ -127,8 +137,8 @@
     )
     (bind ?flag2 FALSE)
     (bind ?price "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 50000)))
-        (printout t "Input house price [1000 - 50000] (dollars): ")
+    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 500000)))
+        (printout t "Input house price [1000 - 500000] (dollars): ")
         (bind ?price (read))
         (if (numberp ?price TRUE) then
         	(bind ?flag2 TRUE)
@@ -144,6 +154,57 @@
     (assert (House (type ?type) (room ?room) (price ?price) (location ?location)))
 )
 
+(deffunction addPerson()
+    (bind ?name "")
+    (while (or (< (str-length ?name) 3) (> (str-length ?name) 20))
+        (printout t "Input your name [3 - 20 characters length]: ")
+        (bind ?name (readline))
+    )
+    (bind ?gender "")
+    (while (and (neq ?gender "Male") (neq ?gender "Female"))
+        (printout t "Input your gender [Male | Female](CASE-SENSITIVE): ")
+        (bind ?gender (readline))
+    )
+    (bind ?preference "")
+    (while (and (neq ?preference "With Garage") (neq ?preference "Without Garage"))
+        (printout t "Input your house preference [With Garage | Without Garage](CASE-SENSITIVE): ")
+        (bind ?preference (readline))
+    )
+    (bind ?flag1 FALSE)
+    (bind ?income "0")
+    (while (or(eq ?flag1 FALSE)(or(< ?income 10000)(> ?income 500000)))
+        (printout t "Input your income [10000 - 500000]: ")
+        (bind ?income (read))
+        (if (numberp ?income TRUE) then
+        	(bind ?flag1 TRUE) 
+            else then
+            	(bind ?income 0)  
+        )
+    )
+    (bind ?location "")
+    (while (and (neq ?location "West Jakarta") (neq ?location "North Jakarta") (neq ?location "South Jakarta"))
+        (printout t "Input your work location [West Jakarta | North Jakarta | South Jakarta](CASE-SENSITIVE): ")
+        (bind ?location (readline))
+    )
+    (bind ?type "")
+    (while (and (neq ?type "Cottage") (neq ?type "Light House") (neq ?type "Skyscraper"))
+        (printout t "Input your preferred house type [Cottage | Light House | Skyscraper](CASE-SENSITIVE): ")
+        (bind ?type (readline))
+    )
+    (bind ?flag2 FALSE)
+    (bind ?car "0")
+    (while (or(eq ?flag2 FALSE)(or(< ?car 1)(> ?car 5)))
+        (printout t "Input number of car you own [1 - 5]: ")
+        (bind ?car (read))
+        (if (numberp ?car TRUE) then
+        	(bind ?flag2 TRUE) 
+            else then
+            	(bind ?car 0) 
+        )
+    )
+    (assert (Person (name ?name) (gender ?gender) (preference ?preference) (income ?income) (location ?location) (type ?type) (car ?car)))
+)
+
 (deffunction updateHouseGarage(?indexUpdate)
     (bind ?type "")
     (while (and (neq ?type "Cottage") (neq ?type "Light House") (neq ?type "Skyscraper"))
@@ -156,16 +217,20 @@
         (printout t "Input room number [1 - 5]: ")
         (bind ?room (read))
         (if (numberp ?room TRUE) then
-        	(bind ?flag1 TRUE)  
+        	(bind ?flag1 TRUE) 
+            else then
+            	(bind ?room 0)   
         )
     )
     (bind ?flag2 FALSE)
     (bind ?price "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 50000)))
-        (printout t "Input house price [1000 - 50000] (dollars): ")
+    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 500000)))
+        (printout t "Input house price [1000 - 500000] (dollars): ")
         (bind ?price (read))
         (if (numberp ?price TRUE) then
         	(bind ?flag2 TRUE)  
+            else then
+            	(bind ?price 0)
         )
     )
     (bind ?location "")
@@ -179,7 +244,9 @@
         (printout t "Input garage number [1 - 5]: ")
         (bind ?garage (read))
         (if (numberp ?garage TRUE) then
-        	(bind ?flag3 TRUE)  
+        	(bind ?flag3 TRUE) 
+            else then
+            	(bind ?garage 0) 
         )
     )
     (bind ?loopCount 0)
@@ -207,15 +274,19 @@
         (bind ?room (read))
         (if (numberp ?room TRUE) then
         	(bind ?flag1 TRUE)  
+            else then
+            	(bind ?room 0)  
         )
     )
     (bind ?flag2 FALSE)
     (bind ?price "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 50000)))
-        (printout t "Input house price [1000 - 50000] (dollars): ")
+    (while (or(eq ?flag2 FALSE)(or(< ?price 1000)(> ?price 500000)))
+        (printout t "Input house price [1000 - 500000] (dollars): ")
         (bind ?price (read))
         (if (numberp ?price TRUE) then
-        	(bind ?flag2 TRUE)  
+        	(bind ?flag2 TRUE) 
+            else then
+            	(bind ?price 0) 
         )
     )
     (bind ?location "")
@@ -256,6 +327,19 @@
         (bind ?token (call ?get next))
         (bind ?fact (call ?token fact 1))
         (if (eq ?loopCount ?indexDelete) then
+            (retract ?fact)
+        )
+    )
+)
+
+(deffunction deletePerson()
+    (bind ?loopCount 0)
+    (bind ?get (run-query getPerson))
+    (while (neq ?loopCount 1)
+        (++ ?loopCount)
+        (bind ?token (call ?get next))
+        (bind ?fact (call ?token fact 1))
+        (if (eq ?loopCount 1) then
             (retract ?fact)
         )
     )
@@ -449,8 +533,19 @@
 )   
 
 (deffunction menu5()
-    ;
-    (facts)
+    (addPerson)
+    (bind ?countPerson 1)
+    (bind ?get (run-query* getPerson))
+    (while (?get next)
+        (printout t ?countPerson ". " (?get getString name) " " (?get getString gender) " " (?get getString preference) " " (?get getInt income)" " (?get getString type) " " (?get getString location) " " (?get getInt car) crlf) 
+        (++ ?countPerson)   
+    )
+    (if (eq (?get getString preference) "With Garage") then
+        (new Template2)
+        elif (eq (?get getString preference) "Without Garage") then
+        (new Template)
+    )
+    (deletePerson)
 )
 
 (reset)
@@ -475,23 +570,6 @@
             (menu4)
         elif (eq ?choice 5) then
             (cls)
-        	(printout t "Type of house to be searched" crlf)
-			(printout t "================================" crlf)
-			(printout t "1. House with Garage" crlf)
-			(printout t "2. House without Garage" crlf)
-		    (bind ?innerchoice -1)
-		    (while (neq ?innerchoice 0)
-		        (printout t ">> Choose [1..2 | 0 back to main menu]: ")
-		        (bind ?innerchoice(read))
-		        (if (eq ?innerchoice 1) then
-		            (run)
-                	(new Template2)
-		            (break) 
-		            elif (eq ?innerchoice 2) then
-		                (run)
-                		(new Template)
-		                (break)
-		        )
-		    )
+        	(menu5)
     )
 )

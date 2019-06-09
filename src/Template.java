@@ -25,12 +25,20 @@ public class Template extends JFrame implements ActionListener{
 	JTextArea [] txt = new JTextArea [20];
 	JButton close = new JButton("Close");
 	String []kata = new String[20];
+	String []person = new String[20];
 	JScrollPane pane = new JScrollPane();
 	JPanel pane2 = new JPanel();
 	Vector <String> vectype = new Vector<String>(); 
 	Vector <Integer> vecroom = new Vector<Integer>(); 
 	Vector <Integer> vecprice = new Vector<Integer>(); 
 	Vector <String> veclocation = new Vector<String>(); 
+	Vector <String> vecpname = new Vector<String>();
+	Vector <String> vecpgender = new Vector<String>();
+	Vector <Integer> vecpincome = new Vector<Integer>(); 
+	Vector <String> vecppreference = new Vector<String>();
+	Vector <String> vecplocation = new Vector<String>(); 
+	Vector <String> vecptype = new Vector<String>(); 
+	Vector <Integer> vecpcar = new Vector<Integer>(); 
 	
 	public Template(){
 		

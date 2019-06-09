@@ -25,6 +25,7 @@ public class Template2 extends JFrame implements ActionListener{
 	JTextArea [] txt = new JTextArea [20];
 	JButton close = new JButton("Close");
 	String []kata = new String[20];
+	String []person = new String[20];
 	JScrollPane pane = new JScrollPane();
 	JPanel pane2 = new JPanel();
 	Vector <String> vectype = new Vector<String>(); 
@@ -32,6 +33,13 @@ public class Template2 extends JFrame implements ActionListener{
 	Vector <Integer> vecprice = new Vector<Integer>(); 
 	Vector <String> veclocation = new Vector<String>(); 
 	Vector <Integer> vecgarage = new Vector<Integer>(); 
+	Vector <String> vecpname = new Vector<String>();
+	Vector <String> vecpgender = new Vector<String>();
+	Vector <Integer> vecpincome = new Vector<Integer>(); 
+	Vector <String> vecppreference = new Vector<String>();
+	Vector <String> vecplocation = new Vector<String>(); 
+	Vector <String> vecptype = new Vector<String>(); 
+	Vector <Integer> vecpcar = new Vector<Integer>(); 
 	
 	public Template2(){
 		
@@ -42,7 +50,7 @@ public class Template2 extends JFrame implements ActionListener{
 		kata[4] = "Garage";
 		
 		
-		setTitle("List of House with Garage");
+		setTitle("The Result of Consultation");
 		setSize(500, 400);
 		pane.setLayout(new ScrollPaneLayout());
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);

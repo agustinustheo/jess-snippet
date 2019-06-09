@@ -17,7 +17,7 @@ import jess.ValueVector;
 
 
 
-public class Template extends JFrame implements ActionListener{
+public class Template2 extends JFrame implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -31,22 +31,24 @@ public class Template extends JFrame implements ActionListener{
 	Vector <Integer> vecroom = new Vector<Integer>(); 
 	Vector <Integer> vecprice = new Vector<Integer>(); 
 	Vector <String> veclocation = new Vector<String>(); 
+	Vector <Integer> vecgarage = new Vector<Integer>(); 
 	
-	public Template(){
+	public Template2(){
 		
 		kata[0] = "Type";
 		kata[1] = "Room";
 		kata[2] = "Price";
 		kata[3] = "Location";
+		kata[4] = "Garage";
 		
 		
-		setTitle("List of House without Garage");
-		setSize(400, 400);
+		setTitle("List of House with Garage");
+		setSize(500, 400);
 		pane.setLayout(new ScrollPaneLayout());
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		pane2.setLayout(new GridLayout(2, 5));
 
-		for(int i=0;i<4;i++)
+		for(int i=0;i<5;i++)
 		{
 			txt[i] = new JTextArea();
 			txt[i].setLineWrap(true);
@@ -60,13 +62,14 @@ public class Template extends JFrame implements ActionListener{
 		
 		//Code in here
 			try {
-				QueryResult result = Main.rete.runQueryStar("getHouse", new ValueVector());
+				QueryResult result = Main.rete.runQueryStar("getHouseGarage", new ValueVector());
 				
 				while(result.next()){
 					vectype.add(result.getString("type"));
 					vecroom.add(result.getInt("room"));
 					vecprice.add(result.getInt("price"));
 					veclocation.add(result.getString("location"));
+					vecgarage.add(result.getInt("garage"));
 				}
 				
 				for(int i = 0; i < vectype.size(); i++){
@@ -74,6 +77,7 @@ public class Template extends JFrame implements ActionListener{
 					txt[1].append(vecroom.get(i) + "\n");
 					txt[2].append(vecprice.get(i) + "\n");
 					txt[3].append(veclocation.get(i) + "\n");
+					txt[4].append(vecgarage.get(i) + "\n");
 				}
 				
 			} catch (JessException e) {
@@ -82,7 +86,7 @@ public class Template extends JFrame implements ActionListener{
 			}
 		//
 		
-		for(int i=0;i<4;i++)
+		for(int i=0;i<5;i++)
 		{
 			pane2.add(txt[i]);
 		}

@@ -73,7 +73,9 @@
         (printout t "Input room number [1 - 5]: ")
         (bind ?room (read))
         (if (numberp ?room TRUE) then
-        	(bind ?flag1 TRUE)  
+        	(bind ?flag1 TRUE) 
+            else then
+            	(bind ?room 0) 
         )
     )
     (bind ?flag2 FALSE)
@@ -83,6 +85,8 @@
         (bind ?price (read))
         (if (numberp ?price TRUE) then
         	(bind ?flag2 TRUE)  
+            else then
+            	(bind ?price 0)
         )
     )
     (bind ?location "")
@@ -97,6 +101,8 @@
         (bind ?garage (read))
         (if (numberp ?garage TRUE) then
         	(bind ?flag3 TRUE)  
+            else then
+            	(bind ?garage 0)
         )
     )
     (assert (HouseGarage (type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage)))
@@ -114,7 +120,9 @@
         (printout t "Input room number [1 - 5]: ")
         (bind ?room (read))
         (if (numberp ?room TRUE) then
-        	(bind ?flag1 TRUE)  
+        	(bind ?flag1 TRUE) 
+            else then
+            	(bind ?room 0)  
         )
     )
     (bind ?flag2 FALSE)
@@ -123,7 +131,9 @@
         (printout t "Input house price [1000 - 50000] (dollars): ")
         (bind ?price (read))
         (if (numberp ?price TRUE) then
-        	(bind ?flag2 TRUE)  
+        	(bind ?flag2 TRUE)
+            else then
+            	(bind ?price 0)  
         )
     )
     (bind ?location "")

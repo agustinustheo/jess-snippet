@@ -46,6 +46,7 @@ public class Template extends JFrame implements ActionListener{
 		kata[1] = "Room";
 		kata[2] = "Price";
 		kata[3] = "Location";
+		kata[4] = "Match Rate";
 		
 		
 		setTitle("List of House without Garage");
@@ -54,7 +55,7 @@ public class Template extends JFrame implements ActionListener{
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		pane2.setLayout(new GridLayout(2, 5));
 
-		for(int i=0;i<4;i++)
+		for(int i=0;i<5;i++)
 		{
 			txt[i] = new JTextArea();
 			txt[i].setLineWrap(true);
@@ -69,6 +70,7 @@ public class Template extends JFrame implements ActionListener{
 		//Code in here
 			try {
 				QueryResult result = Main.rete.runQueryStar("getHouse", new ValueVector());
+				QueryResult search = Main.rete.runQueryStar("getPerson", new ValueVector());
 				
 				while(result.next()){
 					vectype.add(result.getString("type"));
@@ -78,10 +80,23 @@ public class Template extends JFrame implements ActionListener{
 				}
 				
 				for(int i = 0; i < vectype.size(); i++){
+					int rate = 100;
 					txt[0].append(vectype.get(i) + "\n");
 					txt[1].append(vecroom.get(i) + "\n");
 					txt[2].append(vecprice.get(i) + "\n");
 					txt[3].append(veclocation.get(i) + "\n");
+					if(vectype.get(i) != search.getString("type")){
+						rate -= 5;
+					}
+
+					if(vecprice.get(i) > search.getInt("income")){
+						rate -= 10;
+					}
+
+					if(veclocation.get(i) != search.getString("location")){
+						rate -= 10;
+					}
+					txt[4].append(rate + "%\n");
 				}
 				
 			} catch (JessException e) {
@@ -90,7 +105,7 @@ public class Template extends JFrame implements ActionListener{
 			}
 		//
 		
-		for(int i=0;i<4;i++)
+		for(int i=0;i<5;i++)
 		{
 			pane2.add(txt[i]);
 		}

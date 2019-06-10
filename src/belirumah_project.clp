@@ -554,7 +554,7 @@
 (while (neq ?choice 6)
     (cls)
     (menu)
-    (printout t "Your Choice >>")
+    (printout t "Your Choice >> ")
     (bind ?choice(read))
     (if (eq ?choice 1) then
         (cls)

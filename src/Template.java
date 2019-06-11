@@ -300,7 +300,7 @@ public class Template extends JFrame
 		Image bufferedImage;
 		try
 		{
-			bufferedImage = ImageIO.read(getClass().getResource("not_available.jpg"));
+			bufferedImage = ImageIO.read(getClass().getResource("image.jpg"));
 			ImageIcon icon = new ImageIcon(getScaledImage(bufferedImage, 320, 180));
 			lbl_img.setIcon(icon);
 		}

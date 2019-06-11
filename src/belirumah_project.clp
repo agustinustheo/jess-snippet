@@ -77,12 +77,12 @@
 )
 
 (defquery getHouseGarageMatch
-    "query to view house WITH garage"
+    "query to view house WITH garage that matches search query"
     (HouseGarageMatch (type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage) (match ?match))
 )
 
 (defquery getHouseMatch
-    "query to view house WITHOUT garage"
+    "query to view house WITHOUT garage that matches search query"
     (HouseMatch (type ?type) (room ?room) (price ?price) (location ?location) (match ?match))
 )
 

@@ -87,6 +87,21 @@
 )
 
 ;INSERT DEFRULE HERE
+(defrule insertHouse
+    
+    ?insertHouse <- (insertHouse ?type ?room ?price ?location ?match)
+    =>
+    (assert (HouseMatch(type ?type) (room ?room) (price ?price) (location ?location) (match ?match)))
+    (retract ?insertHouse)
+)
+
+(defrule insertHouseGarage
+    
+    ?insertHouseGarage <- (insertHouseGarage ?type ?room ?price ?location ?garage ?match)
+    =>
+    (assert (HouseGarageMatch(type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage) (garage ?garage) (match ?match)))
+    (retract ?insertHouseGarage)
+)
 ;//
 
 ; TODO LIST : 
@@ -436,9 +451,10 @@
             (bind ?match (- ?match 10))
        )
        (if (> ?match 0) then
-            (assert (HouseGarageMatch (type (?get getString type)) (room (?get getInt room)) (price (?get getInt price)) (location (?get getString location)) (garage (?get getInt garage)) (match ?match)))
+            (assert (insertHouseGarage (?get getString type) (?get getInt room) (?get getInt price) (?get getString location) (?get getInt garage) ?match))
        )
     )
+    (run)
 )
 
 (deffunction calculateHouseMatch(?person)
@@ -455,9 +471,10 @@
             (bind ?match (- ?match 10))
        )
        (if (> ?match 0) then
-            (assert (HouseMatch (type (?get getString type)) (room (?get getInt room)) (price (?get getInt price)) (location (?get getString location)) (match ?match)))
+            (assert (insertHouse (?get getString type) (?get getInt room) (?get getInt price) (?get getString location) ?match))
        )
     )
+    (run)
 )
 
 (deffunction menu()

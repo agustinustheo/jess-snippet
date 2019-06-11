@@ -23,21 +23,6 @@
 )
 
 (reset)
-(fuck)
-
-(defrule viewrule
-    (view ?g)
-    (person (name ?n)(age ?a)(gender ?g))
-    =>
-	(bind ?*count* (+ ?*count* 1))
-    (printout t ?*count* ". " ?n " " ?a " " ?g crlf)
-    )
-
-(defrule retractView
-   	?view <- (view ?gender)
-    =>
-    (retract ?view)
-)
 
 (defrule insertPerson
     
@@ -56,7 +41,7 @@
 )
 
 
-(assert (view "male"))
+(assert (insert "Bryaan" 20 "male"))
 (assert (insert "Bryan" 50 "male"))
 (run)
 (fuck)

@@ -28,6 +28,23 @@
     (slot car)
 )
 
+(deftemplate HouseMatch
+    (slot type)
+    (slot room)
+    (slot price)
+    (slot location)
+    (slot match)
+)
+
+(deftemplate HouseGarageMatch
+	(slot type)
+    (slot room)
+    (slot price)
+    (slot location)
+    (slot garage)
+    (slot match)
+)
+
 (deffacts HouseFact
 	(House (type "Cottage") (room 3) (price 7500) (location "South Jakarta")) 
 	(House (type "Light House") (room 3) (price 25000) (location "South Jakarta")) 
@@ -59,11 +76,22 @@
     (Person (name ?name) (gender ?gender) (preference ?preference) (income ?income) (location ?location) (type ?type) (car ?car))
 )
 
+(defquery getHouseGarageMatch
+    "query to view house WITH garage"
+    (HouseGarageMatch (type ?type) (room ?room) (price ?price) (location ?location) (garage ?garage) (match ?match))
+)
+
+(defquery getHouseMatch
+    "query to view house WITHOUT garage"
+    (HouseMatch (type ?type) (room ?room) (price ?price) (location ?location) (match ?match))
+)
+
 ;INSERT DEFRULE HERE
 ;//
 
 ; TODO LIST : 
 ; menu5 function !!important!!
+; addPerson method --> add validation if preference = without garage, then ?car=0
 
 (deffunction cls()
 	(for (bind ?i 0) (<= ?i 30) (++ ?i)
@@ -191,16 +219,20 @@
         (printout t "Input your preferred house type [Cottage | Light House | Skyscraper](CASE-SENSITIVE): ")
         (bind ?type (readline))
     )
-    (bind ?flag2 FALSE)
-    (bind ?car "0")
-    (while (or(eq ?flag2 FALSE)(or(< ?car 1)(> ?car 5)))
-        (printout t "Input number of car you own [1 - 5]: ")
-        (bind ?car (read))
-        (if (numberp ?car TRUE) then
-        	(bind ?flag2 TRUE) 
-            else then
-            	(bind ?car 0) 
+    (if (eq ?preference "With Garage") then
+        (bind ?flag2 FALSE)
+        (bind ?car "0")
+        (while (or(eq ?flag2 FALSE)(or(< ?car 1)(> ?car 5)))
+            (printout t "Input number of car you own [1 - 5]: ")
+            (bind ?car (read))
+            (if (numberp ?car TRUE) then
+            	(bind ?flag2 TRUE) 
+                else then
+                	(bind ?car 0) 
+            )
         )
+        elif (eq ?preference "Without Garage") then
+        (bind ?car 0)
     )
     (assert (Person (name ?name) (gender ?gender) (preference ?preference) (income ?income) (location ?location) (type ?type) (car ?car)))
 )
@@ -342,6 +374,89 @@
         (if (eq ?loopCount 1) then
             (retract ?fact)
         )
+    )
+)
+
+(deffunction deleteHouseGarageMatch()
+    (bind ?matchCount 1)
+    (bind ?getCount (run-query* getHouseGarageMatch))
+    (while (?getCount next)
+        (++ ?matchCount)
+    )
+    (bind ?get (run-query getHouseGarageMatch))
+    (for (bind ?i 1) (< ?i ?matchCount) (++ ?i)
+        (bind ?loopCount 0)
+        (bind ?get (run-query getHouseGarageMatch))
+        (while (neq ?loopCount 1)
+            (++ ?loopCount)
+            (bind ?token (call ?get next))
+            (bind ?fact (call ?token fact 1))
+            (if (eq ?loopCount 1) then
+                (retract ?fact)
+            )
+        )
+    )   
+)
+
+(deffunction deleteHouseMatch()
+    (bind ?matchCount 1)
+    (bind ?getCount (run-query* getHouseMatch))
+    (while (?getCount next)
+        (++ ?matchCount)
+    )
+    (bind ?get (run-query getHouseMatch))
+    (for (bind ?i 1) (< ?i ?matchCount) (++ ?i)
+        (bind ?loopCount 0)
+        (bind ?get (run-query getHouseMatch))
+        (while (neq ?loopCount 1)
+            (++ ?loopCount)
+            (bind ?token (call ?get next))
+            (bind ?fact (call ?token fact 1))
+            (if (eq ?loopCount 1) then
+                (retract ?fact)
+            )
+        )
+    )   
+)
+
+(deffunction calculateHouseGarageMatch(?person)
+    (bind ?get (run-query* getHouseGarage))
+    (while (?get next)
+       (bind ?match 100)
+       (if (< (?person getInt income) (?get getInt price)) then
+            (bind ?match (- ?match 10))
+       )
+       (if (neq (?person getString type) (?get getString type)) then
+            (bind ?match (- ?match 5))
+       )
+       (if (neq (?person getString location) (?get getString location)) then
+            (bind ?match (- ?match 10))
+       )
+       (if (> (?person getInt car) (?get getInt garage)) then
+            (bind ?match (- ?match 10))
+       )
+       (if (> ?match 0) then
+            (assert (HouseGarageMatch (type (?get getString type)) (room (?get getInt room)) (price (?get getInt price)) (location (?get getString location)) (garage (?get getInt garage)) (match ?match)))
+       )
+    )
+)
+
+(deffunction calculateHouseMatch(?person)
+    (bind ?get (run-query* getHouse))
+    (while (?get next)
+       (bind ?match 100)
+       (if (< (?person getInt income) (?get getInt price)) then
+            (bind ?match (- ?match 10))
+       )
+       (if (neq (?person getString type) (?get getString type)) then
+            (bind ?match (- ?match 5))
+       )
+       (if (neq (?person getString location) (?get getString location)) then
+            (bind ?match (- ?match 10))
+       )
+       (if (> ?match 0) then
+            (assert (HouseMatch (type (?get getString type)) (room (?get getInt room)) (price (?get getInt price)) (location (?get getString location)) (match ?match)))
+       )
     )
 )
 
@@ -534,16 +649,23 @@
 
 (deffunction menu5()
     (addPerson)
+    ;QUERY BELOW FOR DEBUG ONLY
     (bind ?countPerson 1)
     (bind ?get (run-query* getPerson))
     (while (?get next)
-        (printout t ?countPerson ". " (?get getString name) " " (?get getString gender) " " (?get getString preference) " " (?get getInt income)" " (?get getString type) " " (?get getString location) " " (?get getInt car) crlf) 
+        ; (printout t ?countPerson ". " (?get getString name) " " (?get getString gender) " " (?get getString preference) " " (?get getInt income)" " (?get getString type) " " (?get getString location) " " (?get getInt car) crlf) 
         (++ ?countPerson)   
     )
     (if (eq (?get getString preference) "With Garage") then
-        (new Template2)
+        (calculateHouseGarageMatch ?get)
         elif (eq (?get getString preference) "Without Garage") then
-        (new Template)
+            (calculateHouseMatch ?get)
+    )
+    (new Template)
+    (if (eq (?get getString preference) "With Garage") then
+        (deleteHouseGarageMatch)
+        elif (eq (?get getString preference) "Without Garage") then
+            (deleteHouseMatch)
     )
     (deletePerson)
 )
